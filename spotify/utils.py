@@ -68,7 +68,7 @@ def refresh_spotify_token(session_key):
     token_type=token_type,refresh_token=refresh_token,expires_in=expires_in)
 
 
-def execute_spotify_request(session_key,endpoint,post_=False,put_=False):
+def execute_spotify_request(session_key,endpoint,post_=False,put_=False,BASE_URL="https://api.spotify.com/v1/me/"):
     tokens = get_user_tokens(session_key)
     headers = {
         "Content-Type":"application/json",

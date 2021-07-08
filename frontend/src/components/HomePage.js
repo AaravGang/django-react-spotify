@@ -38,8 +38,8 @@ export default function HomePage(homePageProps) {
         </Grid>
 
         <Grid item xs={12}>
-          <ButtonGroup>
-            <Button color="primary" to="/create" component={Link}>
+          <ButtonGroup variant="contained">
+            <Button to="/create" component={Link}>
               Create a Room
             </Button>
             <Button color="secondary" to="/join" component={Link}>

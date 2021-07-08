@@ -107,7 +107,7 @@ export default function Room(props) {
     return (
       <Grid item xs={12}>
         <Button
-          variant="outlined"
+          variant="contained"
           color="primary"
           onClick={() => {
             updateShowSettings(true);
@@ -133,20 +133,12 @@ export default function Room(props) {
   };
 
   return (
-    <Grid container spacing={4} align="center">
+    <Grid xs={8} container spacing={4} align="center">
       <Grid item xs={12}>
         <Typography color="primary" variant="h4" component="h4">
           Code: {roomCode}
         </Typography>
       </Grid>
-
-      {/* <Grid item xs={12}>
-        <Typography variant="h5" component="h5">
-          Host? : {isHost.toString()}
-        </Typography>
-        <h5>Play/Pause Allowed? : {guestCanPause.toString()}</h5>
-        <h5>Votes To Skip Song: {votesToSkip.toString()}</h5>
-      </Grid> */}
 
       <MusicPlayer {...song} />
 
@@ -155,7 +147,7 @@ export default function Room(props) {
       <Grid item xs={12}>
         <Button
           color="secondary"
-          variant="outlined"
+          variant="contained"
           onClick={leaveButtonClicked}
         >
           Leave Room

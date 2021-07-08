@@ -43,7 +43,7 @@ export default function CreateRoomPage(props) {
   return (
     <Grid container spacing={3} align="center">
       <Grid item xs={12}>
-        <Typography component="h3" variant="h3">
+        <Typography component="h3" variant="h3" color="primary">
           Create A Room
         </Typography>
       </Grid>
@@ -104,7 +104,7 @@ export default function CreateRoomPage(props) {
       </Grid>
       <Grid item xs={12}>
         <Button
-          variant="outlined"
+          variant="contained"
           color="secondary"
           disableElevation
           to="/join"

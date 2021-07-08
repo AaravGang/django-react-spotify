@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from .credentials import *
-from requests import Request,post
+from requests import Request,post,get
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
@@ -10,7 +10,7 @@ from api.models import Room
 
 class AuthUrl(APIView):
     def get(self,request,format=None):
-        scopes = "user-read-playback-state user-modify-playback-state user-read-currently-playing"
+        scopes = "playlist-read-private playlist-read-collaborative user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played user-read-private user-read-email"
         url = Request("GET","https://accounts.spotify.com/authorize",
         params={
             "scope":scopes,
@@ -40,6 +40,7 @@ def spotify_callback(request,format=None):
     refresh_token = response.get("refresh_token")
     expires_in  = response.get("expires_in")
     error = response.get("error")
+    print(access_token)
 
     if not request.session.exists(request.session.session_key):
         request.session.create()
@@ -96,3 +97,66 @@ class CurrentSong(APIView):
         }
 
         return Response(song,status=status.HTTP_200_OK)
+
+class GetPlaylists(APIView):
+    def get(self,request,format=None):
+
+        room_code = self.request.session.get("room_code")
+
+        queryset = Room.objects.filter(code=room_code)
+        if not queryset.exists():
+            return Response({"Room Not found":"Room with provided room code does not exist"},status=status.HTTP_404_NOT_FOUND)
+        room = queryset[0]
+        host = room.host
+        playlists_endpoint = "playlists"
+        response = execute_spotify_request(host,playlists_endpoint)
+
+        if "error" in response or "items" not in response:
+            return Response({"Error":response.get("error")},status=status.HTTP_204_NO_CONTENT)
+        items = response.get("items")
+       
+        playlists = [{"description":item.get("description"),
+        "id":item.get("id"),
+        "name":item.get("name"),
+        "image":item.get("images")[0].get("url"),
+        "owner":{"id":item.get("owner").get("id"),"name":item.get("owner").get("display_name")}} for item in items]
+       
+        return Response(playlists,status=status.HTTP_200_OK)
+
+class Tracks(APIView):
+   def get(self,request,format=None):
+
+        room_code = self.request.session.get("room_code")
+
+        queryset = Room.objects.filter(code=room_code)
+        if not queryset.exists():
+            return Response({"Room Not found":"Room with provided room code does not exist"},status=status.HTTP_404_NOT_FOUND)
+        room = queryset[0]
+        host = room.host
+        playlists_endpoint = "playlists"
+        response = execute_spotify_request(host,playlists_endpoint)
+
+        if "error" in response or "items" not in response:
+            return Response({"Error":response.get("error")},status=status.HTTP_204_NO_CONTENT)
+        items = response.get("items")
+       
+        playlists = [{"description":item.get("description"),
+        "id":item.get("id"),
+        "name":item.get("name"),
+        "image":item.get("images")[0].get("url"),
+        "owner":{"id":item.get("owner").get("id"),"name":item.get("owner").get("display_name")}} for item in items]
+        all_tracks = []
+        for playlist in playlists:
+            print(playlist.get('id'))
+            tracks_endpoint = f'https://api.spotify.com/v1/playlists/{playlist.get("id")}/tracks'
+            tracks_response = execute_spotify_request(host,tracks_endpoint,BASE_URL="")
+            if "error" in tracks_response or "items" not in tracks_response: 
+                print(tracks_response.get("error"))
+                continue
+            tracks = [{"id":item.get('track').get("id"),
+            "artists":item.get('track').get('album').get("artists"),
+            "name":item.get('track').get("name"),} for item in tracks_response.get("items")]
+            all_tracks.append(tracks)
+        return Response(all_tracks,status=status.HTTP_200_OK)
+
+

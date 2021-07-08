@@ -22,7 +22,6 @@ export default function MusicPlayer(
   },
   ...props
 ) {
-  let songProgress = (progress / duration) * 100;
   return (
     <Card xs={12}>
       <Grid container alignItems="center" align="center">
@@ -38,20 +37,23 @@ export default function MusicPlayer(
             {artists}
           </Typography>
           <div>
-            <IconButton>
+            <IconButton disabled={true}>
               {is_playing ? (
                 <PauseCircleFilledIcon />
               ) : (
                 <PlayCircleFilledIcon />
               )}
             </IconButton>
-            <IconButton>
+            <IconButton disabled={true}>
               <SkipNextIcon />
             </IconButton>
           </div>
         </Grid>
       </Grid>
-      <LinearProgress variant="determinate" value={songProgress} />
+      <LinearProgress
+        variant="determinate"
+        value={(progress / duration) * 100}
+      />
     </Card>
   );
 }

@@ -6,6 +6,9 @@ urlpatterns = [
     path("get-auth-url",AuthUrl.as_view()),
     path("redirect",spotify_callback),
     path("is-authenticated",IsAuthenticated.as_view()),
-    path("current-song",CurrentSong.as_view())
+    path("current-song",CurrentSong.as_view()),
+    path("playlists",GetPlaylists.as_view()),
+    path("tracks",Tracks.as_view())
+
 
 ]

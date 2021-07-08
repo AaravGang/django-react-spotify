@@ -74,7 +74,7 @@ export default function JoinRoomPage(props) {
       </Grid>
       <Grid item xs={12}>
         <Button
-          variant="outlined"
+          variant="contained"
           color="secondary"
           disableElevation
           to="/create"
