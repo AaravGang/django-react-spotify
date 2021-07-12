@@ -20,7 +20,7 @@ export default function App() {
         />
       ) : null}
       <div className="center">
-        <HomePage setAlertParams={setAlertParams}/>
+        <HomePage setAlertParams={setAlertParams} />
       </div>
     </div>
   );

@@ -29,11 +29,11 @@ export default function MusicPlayer(
           <img src={image_url} height="100%" width="100%" />
         </Grid>
 
-        <Grid item xs={8}>
-          <Typography component="h5" variant="h5">
+        <Grid item xs={8} style={{ width: "100%" }}>
+          <Typography noWrap={true} component="h5" variant="h5">
             {title}
           </Typography>
-          <Typography color="textSecondary" variant="subtitle1">
+          <Typography noWrap={true}  color="textSecondary" variant="subtitle1">
             {artists}
           </Typography>
           <div>

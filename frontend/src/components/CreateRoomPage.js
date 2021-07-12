@@ -37,6 +37,13 @@ export default function CreateRoomPage(props) {
           show: true,
           bgColor: "success",
         });
+      })
+      .catch((e) => {
+        props.setAlertParams({
+          text: "Internal Server Error...while creating room",
+          show: true,
+          bgColor: "danger",
+        });
       });
   };
 

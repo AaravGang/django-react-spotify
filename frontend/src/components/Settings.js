@@ -33,24 +33,32 @@ export default function Settings(props) {
         code: code,
       }),
     };
-    fetch("/api/update-room", requestOptions).then((response) => {
-      if (response.ok) {
-        props.getRoomDetails();
-        console.log("room updated on host side successfully");
+    fetch("/api/update-room", requestOptions)
+      .then((response) => {
+        if (response.ok) {
+          props.getRoomDetails();
+          console.log("room updated on host side successfully");
+          props.setAlertParams({
+            text: "Updated Room Successfully!",
+            show: true,
+            bgColor: "info",
+          });
+        } else {
+          console.log("did not update room");
+          props.setAlertParams({
+            text: "Could not update room. Please try again later...",
+            show: true,
+            bgColor: "danger",
+          });
+        }
+      })
+      .catch((e) => {
         props.setAlertParams({
-          text: "Updated Room Successfully!",
-          show: true,
-          bgColor: "info",
-        });
-      } else {
-        console.log("did not update room");
-        props.setAlertParams({
-          text: "Could not update room. Please try again later...",
+          text: "Internal Server Error...while updating room",
           show: true,
           bgColor: "danger",
         });
-      }
-    });
+      });
   }
   return (
     <Grid item xs={12}>

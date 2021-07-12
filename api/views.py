@@ -98,7 +98,9 @@ class LeaveRoom(APIView):
                 room = queryset[0]
                 if room.host== self.request.session.session_key:
                     room.delete()
-        return Response({'Message': 'Success'}, status=status.HTTP_200_OK)
+                    return Response({'Message': 'Success'}, status=status.HTTP_200_OK)
+            return Response({'error': 'Room with given code does not exist!'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error":"Internal server error"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class UpdateRoom(APIView):

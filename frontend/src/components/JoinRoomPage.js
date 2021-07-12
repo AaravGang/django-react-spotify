@@ -34,7 +34,7 @@ export default function JoinRoomPage(props) {
       })
       .catch((error) => {
         props.setAlertParams({
-          text: error.toString(),
+          text: "Internal Server Error...while joining room",
           show: true,
           bgColor: "danger",
         });
@@ -51,6 +51,7 @@ export default function JoinRoomPage(props) {
       </Grid>
       <Grid item xs={12}>
         <TextField
+          className="bg-light"
           id="join-room-text-field"
           variant="filled"
           label="Code"

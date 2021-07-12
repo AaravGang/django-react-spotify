@@ -15,14 +15,15 @@ import {
 export default function HomePage(homePageProps) {
   let [roomCode, setRoomCode] = useState(null);
   let [redirect, setRedirect] = useState(false);
-  async function redirectToCurrentRoom() {
+  async function getPreviousRoomCode() {
     await fetch("/api/redirect-room")
       .then((response) => response.json())
       .then((data) => {
         setRoomCode(data.code);
-      });
+      })
+      .catch((e) => console.log(e));
   }
-  useEffect(redirectToCurrentRoom, []);
+  useEffect(getPreviousRoomCode, []);
   function renderHomePage() {
     return (
       <Grid spacing={5} container align="center">

@@ -18,6 +18,7 @@ export default function Room(props) {
 
   useEffect(() => {
     let currentSongInterval = setInterval(getCurrentSong, 1000);
+
     return () => {
       clearInterval(currentSongInterval);
     };
@@ -31,6 +32,13 @@ export default function Room(props) {
         }
         props.leaveRoomCallback(null);
         props.history.push("/");
+        props.setAlertParams({
+          text: isHost
+            ? "Left room successfully"
+            : "This room has been deleted!",
+          show: true,
+          bgColor: isHost ? "success" : "danger",
+        });
       })
       .then((data) => {
         setVotesToSkip(data.votes_to_skip);
@@ -41,6 +49,14 @@ export default function Room(props) {
           authenticateSpotify();
         }
       });
+    // .catch((e) => {
+    //   props.setAlertParams({
+    //     text: "Internal Server Error... (while getting room details)",
+    //     show: true,
+    //     bgColor: "danger",
+    //   });
+    //   console.log(e);
+    // });
   }
 
   const authenticateSpotify = () => {
@@ -82,7 +98,10 @@ export default function Room(props) {
       })
       .then((data) => {
         setSong(data);
-        console.log(data);
+      })
+      .catch((e) => {
+        console.log(e);
+        setSong({});
       });
   }
 
@@ -92,15 +111,23 @@ export default function Room(props) {
       method: "POST",
     };
 
-    fetch("/api/leave-room", requestOptions).then((_response) => {
-      props.leaveRoomCallback(null);
-      props.history.push("/");
-      props.setAlertParams({
-        text: "Left Room Successfully!",
-        show: true,
-        bgColor: "success",
+    fetch("/api/leave-room", requestOptions)
+      .then((_response) => {
+        props.leaveRoomCallback(null);
+        props.history.push("/");
+        props.setAlertParams({
+          text: "Left Room Successfully!",
+          show: true,
+          bgColor: "success",
+        });
+      })
+      .catch((e) => {
+        props.setAlertParams({
+          text: "Internal Server Error...while leaving room",
+          show: true,
+          bgColor: "danger",
+        });
       });
-    });
   };
 
   const renderSettingsButton = () => {
@@ -133,7 +160,7 @@ export default function Room(props) {
   };
 
   return (
-    <Grid xs={8} container spacing={4} align="center">
+    <Grid container spacing={4} align="center">
       <Grid item xs={12}>
         <Typography color="primary" variant="h4" component="h4">
           Code: {roomCode}
